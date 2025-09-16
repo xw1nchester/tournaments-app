@@ -26,7 +26,6 @@ export const authMiddleware = (
         req.user = { id };
         next();
     } catch (error) {
-        console.log(error);
         next(new AppError('unathorized', 401));
     }
 };

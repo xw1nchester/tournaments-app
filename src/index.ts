@@ -20,5 +20,3 @@ const run = async () => {
 };
 
 run();
-
-// TODO: решить проблему с запуском index.js

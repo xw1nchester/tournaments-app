@@ -16,10 +16,7 @@ const generateToken = (payload: TokenPayload) => {
 };
 
 export const extractPayloadFromToken = (token: string): TokenPayload => {
-    return jwt.verify(
-        token,
-        process.env.JWT_ACCESS_SECRET
-    ) as TokenPayload;
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET) as TokenPayload;
 };
 
 export const registerUser = async (nickname: string, password: string) => {
@@ -36,9 +33,9 @@ export const registerUser = async (nickname: string, password: string) => {
     return {
         user: {
             id: createdUser.id,
-            nickname: createdUser.nickname,
-            token: generateToken({ id: createdUser.id })
-        }
+            nickname: createdUser.nickname
+        },
+        token: generateToken({ id: createdUser.id })
     };
 };
 
@@ -61,8 +58,8 @@ export const loginUser = async (nickname: string, password: string) => {
     return {
         user: {
             id: existingUser.id,
-            nickname: existingUser.nickname,
-            token: generateToken({ id: existingUser.id })
-        }
+            nickname: existingUser.nickname
+        },
+        token: generateToken({ id: existingUser.id })
     };
 };

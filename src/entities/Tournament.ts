@@ -9,7 +9,8 @@ import {
 } from 'typeorm';
 
 import { User } from './User';
-import { TournamentParticipant } from './UserTournament';
+import { TournamentParticipant } from './TournamentParticipant';
+import { Match } from './Match';
 
 @Entity({ name: 'tournaments' })
 export class Tournament {
@@ -30,6 +31,13 @@ export class Tournament {
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
-    @OneToMany(() => TournamentParticipant, tp => tp.tournament)
+    @OneToMany(() => TournamentParticipant, tp => tp.tournament, {
+        cascade: true
+    })
     participants: TournamentParticipant[];
+
+    @OneToMany(() => Match, m => m.tournament, {
+        cascade: true
+    })
+    matches: Match[];
 }

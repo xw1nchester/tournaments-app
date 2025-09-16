@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
         "target": "ES2021",
-        // "moduleResolution": "node",
+        "module": "commonjs",
+        "moduleResolution": "node",
         "esModuleInterop": true,
         "rootDir": "./src/",
-        "baseUrl": "./",
+        "baseUrl": "./src",
         "outDir": "./build",
         "noImplicitAny": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "resolveJsonModule": true,
     },
-    "include": ["src/**/*"]
+    "include": ["src"]
 }

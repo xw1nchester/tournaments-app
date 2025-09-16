@@ -1,5 +1,10 @@
 import { DataSource } from 'typeorm';
 
+import { Tournament } from './entities/Tournament';
+import { TournamentParticipant } from './entities/TournamentParticipant';
+import { User } from './entities/User';
+import { Match } from './entities/Match';
+
 export const AppDataSource = new DataSource({
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -9,5 +14,6 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: ['build/entities/**/*.ts', 'src/entities/**/*.ts']
+    // TODO: разобраться с путем
+    entities: [User, Tournament, TournamentParticipant, Match]
 });
