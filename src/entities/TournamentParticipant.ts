@@ -11,7 +11,6 @@ import {
 import { User } from './User';
 import { Tournament } from './Tournament';
 
-// TODO: по хорошему сделать user и tournament первичными ключами
 @Entity({ name: 'tournament_participants' })
 export class TournamentParticipant {
     @PrimaryColumn({ name: 'user_id' })

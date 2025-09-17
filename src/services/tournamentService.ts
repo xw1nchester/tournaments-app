@@ -1,11 +1,11 @@
-import { powerOfTwo } from '../utils/power-of-two';
 import { AppError } from '../AppError';
-import { checkUserIdsExists } from './userService';
 import { AppDataSource } from '../data-source';
-import { Tournament } from '../entities/Tournament';
-import { makeRandomPairs } from '../utils/make-random-pairs';
 import { Match } from '../entities/Match';
+import { Tournament } from '../entities/Tournament';
 import { TournamentParticipant } from '../entities/TournamentParticipant';
+import { powerOfTwo } from '../utils/power-of-two';
+import { makeRandomPairs } from '../utils/make-random-pairs';
+import { checkUserIdsExists } from './userService';
 
 const tournamentRepo = AppDataSource.getRepository(Tournament);
 const matchRepo = AppDataSource.getRepository(Match);
@@ -15,7 +15,7 @@ export const createTournament = async (
     creatorId: number,
     participantIds: number[]
 ) => {
-    if (!powerOfTwo(participantIds.length)) {
+    if (participantIds.length < 2 || !powerOfTwo(participantIds.length)) {
         throw new AppError(
             'count of participants should be 2 or 4 or 8 or 16 etc'
         );
@@ -52,7 +52,6 @@ export const getTournaments = async () => {
 };
 
 export const getTournamentById = async (tournamentId: number) => {
-    // TODO: order matches by step
     const tournament = await tournamentRepo.findOne({
         where: { id: tournamentId },
         relations: {
@@ -61,8 +60,11 @@ export const getTournamentById = async (tournamentId: number) => {
             matches: { firstUser: true, secondUser: true, winner: true }
         },
         order: {
+            participants: {
+                place: 'ASC'
+            },
             matches: {
-                step: 'asc'
+                step: 'ASC'
             }
         }
     });
@@ -133,11 +135,8 @@ export const identifyRandomWinners = async (
         throw new AppError('tournament does not have any matches');
     }
 
-    // TODO: возможно логика изменится когда я буду группировать по step
-    const currentStep = tournament.matches[matchesCount - 1].step;
-    const currentMatches = tournament.matches.filter(
-        m => m.step == currentStep
-    );
+    const step = tournament.matches[matchesCount - 1].step;
+    const currentMatches = tournament.matches.filter(m => m.step == step);
 
     if (currentMatches.some(m => m.winner)) {
         throw new AppError('on the current match winners already identified');
@@ -145,17 +144,15 @@ export const identifyRandomWinners = async (
 
     let startPlace = tournament.participants.length;
 
-    if (currentStep > 0) {
-        startPlace =
-            tournament.participants.reduce<number>((min, item) => {
-                if (item.place !== null) {
-                    return Math.min(min, item.place);
-                }
-                return min;
-            }, tournament.participants.length) - 1;
+    if (step > 0) {
+        for (const { place } of tournament.participants) {
+            if (place && place < startPlace) {
+                startPlace = place;
+            }
+        }
+        startPlace--;
     }
 
-    // TODO: попробовать вызвать ошибку
     await AppDataSource.transaction(async tr => {
         for (const { id: matchId, firstUser, secondUser } of currentMatches) {
             const winnerId = Math.random() > 0.5 ? firstUser.id : secondUser.id;

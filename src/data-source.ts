@@ -13,7 +13,6 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     synchronize: true,
-    logging: true,
-    // TODO: разобраться с путем
+    logging: false,
     entities: [User, Tournament, TournamentParticipant, Match]
 });

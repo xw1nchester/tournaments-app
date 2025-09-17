@@ -6,6 +6,23 @@ import { validationMiddleware } from '../middlewares/validationMiddleware';
 
 export const authRouter = express.Router();
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Регистрация пользователя
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/Auth'
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Auth'
+ *       400:
+ *         $ref: '#/components/responses/Error'
+ *       500:
+ *         $ref: '#/components/responses/Error'
+ */
 authRouter.post(
     '/register',
     body('nickname').notEmpty().withMessage('nickname should not be empty'),
@@ -16,6 +33,23 @@ authRouter.post(
     registerUserHandler
 );
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Вход пользователя
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/Auth'
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Auth'
+ *       400:
+ *         $ref: '#/components/responses/Error'
+ *       500:
+ *         $ref: '#/components/responses/Error'
+ */
 authRouter.post(
     '/login',
     body('nickname').notEmpty().withMessage('nickname should not be empty'),

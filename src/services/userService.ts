@@ -1,11 +1,15 @@
-import { User } from '../entities/User';
-import { AppDataSource } from '../data-source';
 import { In } from 'typeorm';
+
+import { AppDataSource } from '../data-source';
+import { User } from '../entities/User';
 
 const userRepo = AppDataSource.getRepository(User);
 
 export const getUserByNickname = async (nickname: string) => {
-    return await userRepo.findOneBy({ nickname });
+    return await userRepo.findOne({
+        where: { nickname },
+        select: { id: true, nickname: true, passwordHash: true }
+    });
 };
 
 export const createUser = async (nickname: string, passwordHash: string) => {

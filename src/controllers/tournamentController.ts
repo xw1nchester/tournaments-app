@@ -32,10 +32,6 @@ export const createTournamentHandler = async (req: Request, res: Response) => {
 
     participantIds = [...new Set(participantIds)];
 
-    if (participantIds.length < 2) {
-        throw new AppError('minimum count of participants should be 2 or more');
-    }
-
     const data = await createTournament(name, creatorId, participantIds);
 
     res.json(data);

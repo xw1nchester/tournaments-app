@@ -8,7 +8,7 @@ export const validationMiddleware = (
 ) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-        return res.send({ errors: result.array() });
+        return res.status(400).json({ errors: result.array() });
     }
 
     return next();
