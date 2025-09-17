@@ -23,7 +23,7 @@ export const registerUser = async (nickname: string, password: string) => {
     const existingUser = await getUserByNickname(nickname);
 
     if (existingUser) {
-        throw new AppError('ser with this nickname already exists');
+        throw new AppError('user with this nickname already exists');
     }
 
     const passwordHash = await bcrypt.hash(password, 3);
